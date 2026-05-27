@@ -220,155 +220,153 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-indigo-50 to-purple-50 flex items-center justify-center relative overflow-hidden py-10">
+    <div className="h-screen w-full bg-gradient-to-br from-slate-100 via-indigo-50 to-purple-50 flex items-center justify-center relative overflow-hidden">
 
       {/* ── CORNER ILLUSTRATIONS ── */}
-      <div className="fixed bottom-0 left-0 w-72 h-96 pointer-events-none select-none hidden sm:block">
+      <div className="absolute bottom-0 left-0 w-64 h-80 pointer-events-none select-none hidden md:block">
         <CornerLeft />
       </div>
-      <div className="fixed bottom-0 right-0 w-72 h-96 pointer-events-none select-none hidden sm:block">
+      <div className="absolute bottom-0 right-0 w-64 h-80 pointer-events-none select-none hidden md:block">
         <CornerRight />
       </div>
 
       {/* subtle background circles for depth */}
-      <div className="fixed top-[-80px] left-[-80px] w-72 h-72 rounded-full bg-indigo-200/30 blur-3xl pointer-events-none" />
-      <div className="fixed bottom-[-60px] right-[-60px] w-80 h-80 rounded-full bg-purple-200/30 blur-3xl pointer-events-none" />
+      <div className="absolute top-[-80px] left-[-80px] w-72 h-72 rounded-full bg-indigo-200/30 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-60px] right-[-60px] w-80 h-80 rounded-full bg-purple-200/30 blur-3xl pointer-events-none" />
 
       {/* ── CENTER CARD ── */}
-      <div className="relative z-10 w-full max-w-md mx-4">
-        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-white/60 px-10 py-10">
+      <div className="relative z-10 w-full max-w-lg mx-4">
+        <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-white/60 px-8 py-6">
 
           {/* logo */}
-          <div className="flex flex-col items-center mb-7">
-            <img src="/logo-icon.png" alt="D-Table Icon" className="w-16 h-16 mb-0 drop-shadow-md object-contain" />
+          <div className="flex flex-col items-center mb-4">
+            <img src="/logo-icon.png" alt="D-Table Icon" className="w-12 h-12 mb-1 drop-shadow-md object-contain" />
             <img src="/logo-text.png" alt="D-Table Analytics" className="h-30 w-auto object-contain" />
           </div>
 
-          <h2 className="text-xl font-bold text-gray-800 text-center mb-1">Create an Account</h2>
-          <p className="text-gray-400 text-sm text-center mb-7">
+          <h2 className="text-lg font-bold text-gray-800 text-center mb-1">Create an Account</h2>
+          <p className="text-gray-400 text-xs text-center mb-5">
             Sign up to get started
           </p>
 
           {/* errors */}
           {error && (
-            <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium text-center">
+            <div className="mb-4 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs font-medium text-center">
               {error}
             </div>
           )}
           {passwordMismatch && (
-            <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm font-medium text-center">
+            <div className="mb-4 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-600 text-xs font-medium text-center">
               Passwords do not match.
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="space-y-4">
-            {/* full name */}
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-                </svg>
-              </span>
-              <input type="text" name="name" value={form.name} onChange={handleChange}
-                placeholder="Full name" required
-                className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
-            </div>
-
-            {/* email */}
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/>
-                </svg>
-              </span>
-              <input type="email" name="email" value={form.email} onChange={handleChange}
-                placeholder="Email address" required
-                className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
-            </div>
-
-            {/* role + department */}
+          <form onSubmit={onSubmit} className="space-y-3">
+            {/* Row 1: Name and Email */}
             <div className="grid grid-cols-2 gap-3">
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                  </svg>
+                </span>
+                <input type="text" name="name" value={form.name} onChange={handleChange}
+                  placeholder="Full name" required
+                  className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 7l10 7 10-7"/>
+                  </svg>
+                </span>
+                <input type="email" name="email" value={form.email} onChange={handleChange}
+                  placeholder="Email address" required
+                  className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
+              </div>
+            </div>
+
+            {/* Row 2: Role, Dept, Manager */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/>
                     <path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/>
                   </svg>
                 </span>
                 <select name="role" value={form.role} onChange={handleChange} required
-                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none cursor-pointer">
+                  className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none cursor-pointer">
                   <option value="" disabled>Role</option>
                   {ROLES.map((r) => <option key={r} value={r}>{r.charAt(0).toUpperCase() + r.slice(1)}</option>)}
                 </select>
               </div>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
                   </svg>
                 </span>
                 <select name="department" value={form.department} onChange={handleChange} required
-                  className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none cursor-pointer">
-                  <option value="" disabled>Department</option>
+                  className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none cursor-pointer">
+                  <option value="" disabled>Dept.</option>
                   {DEPARTMENTS.map((d) => <option key={d} value={d}>{d}</option>)}
                 </select>
               </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+                  </svg>
+                </span>
+                <input type="text" name="managerId" value={form.managerId} onChange={handleChange}
+                  placeholder="Manager ID"
+                  className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
+              </div>
             </div>
 
-            {/* manager id */}
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-                  <circle cx="9" cy="7" r="4"/>
-                  <path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
-                </svg>
-              </span>
-              <input type="text" name="managerId" value={form.managerId} onChange={handleChange}
-                placeholder="Manager ID (optional)"
-                className="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
-            </div>
-
-            {/* password */}
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
-                </svg>
-              </span>
-              <input type={showPassword ? "text" : "password"} name="password"
-                value={form.password} onChange={handleChange}
-                placeholder="Password" required
-                className="w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
-              <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                <EyeIcon open={showPassword} />
-              </button>
-            </div>
-
-            {/* confirm password */}
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              </span>
-              <input type={showConfirm ? "text" : "password"} name="confirmPassword"
-                value={form.confirmPassword} onChange={handleChange}
-                placeholder="Confirm password" required
-                className={`w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all ${passwordMismatch ? "border-red-300 focus:border-red-400 focus:ring-red-100" : ""}`} />
-              <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                <EyeIcon open={showConfirm} />
-              </button>
+            {/* Row 3: Passwords */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+                  </svg>
+                </span>
+                <input type={showPassword ? "text" : "password"} name="password"
+                  value={form.password} onChange={handleChange}
+                  placeholder="Password" required
+                  className="w-full pl-9 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                  <EyeIcon open={showPassword} />
+                </button>
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </span>
+                <input type={showConfirm ? "text" : "password"} name="confirmPassword"
+                  value={form.confirmPassword} onChange={handleChange}
+                  placeholder="Confirm password" required
+                  className={`w-full pl-9 pr-10 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all ${passwordMismatch ? "border-red-300 focus:border-red-400 focus:ring-red-100" : ""}`} />
+                <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                  <EyeIcon open={showConfirm} />
+                </button>
+              </div>
             </div>
 
             {/* submit */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 mt-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-300/40 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-2.5 mt-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-indigo-300/40 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -383,7 +381,7 @@ export default function RegisterPage() {
           </form>
 
           {/* divider */}
-          <div className="flex items-center gap-3 my-5">
+          <div className="flex items-center gap-3 my-4">
             <div className="flex-1 h-px bg-gray-100"/>
             <span className="text-gray-400 text-xs">or sign up with</span>
             <div className="flex-1 h-px bg-gray-100"/>
@@ -392,33 +390,18 @@ export default function RegisterPage() {
           {/* social icons row */}
           <div className="flex gap-3 justify-center">
             {/* Google */}
-            <button className="flex-1 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-indigo-200 transition-all flex items-center justify-center">
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <button className="flex-1 py-2 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-indigo-200 transition-all flex items-center justify-center">
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
             </button>
-            {/* Microsoft */}
-            {/* <button className="flex-1 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-indigo-200 transition-all flex items-center justify-center">
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="#f25022" d="M1 1h10v10H1z"/>
-                <path fill="#00a4ef" d="M13 1h10v10H13z"/>
-                <path fill="#7fba00" d="M1 13h10v10H1z"/>
-                <path fill="#ffb900" d="M13 13h10v10H13z"/>
-              </svg>
-            </button> */}
-            {/* Apple */}
-            {/* <button className="flex-1 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-indigo-200 transition-all flex items-center justify-center">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-            </button> */}
           </div>
 
           {/* login link */}
-          <p className="text-center text-gray-400 text-sm mt-6">
+          <p className="text-center text-gray-400 text-xs mt-4">
             Already have an account?{" "}
             <Link to="/login" className="text-indigo-600 font-semibold hover:underline">
               Sign in
