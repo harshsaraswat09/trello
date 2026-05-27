@@ -372,7 +372,7 @@ export default function LandingPage() {
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <img src="/logo-icon.png" alt="Taskly logo" className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
-            <img src="/logo-text.png" alt="Taskly" className="h-7 w-auto object-contain sm:h-8" />
+            <img src="/logo-text.png" alt="Taskly" className="h-14 w-auto object-contain sm:h-8" />
           </div>
           <div className="flex flex-wrap items-center gap-4">
             <a href="#" className="transition hover:text-slate-900">Privacy Policy</a>
