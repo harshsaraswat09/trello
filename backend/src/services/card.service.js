@@ -26,11 +26,23 @@ const getMembershipFromList = async (listId, userId) => {
   return { list, board, membership };
 };
 
-const assertCardWriteAccess = (membership) => {
-  if (!membership || membership.role === WORKSPACE_ROLES.GUEST) {
-    const error = new Error("Guests have read-only access");
+const assertCardWriteAccess = (membership, card, userId) => {
+  if (!membership) {
+    const error = new Error("Access denied");
     error.statusCode = 403;
     throw error;
+  }
+  if (membership.role === WORKSPACE_ROLES.VIEWER) {
+    const error = new Error("Viewers have read-only access");
+    error.statusCode = 403;
+    throw error;
+  }
+  if (membership.role === WORKSPACE_ROLES.GUEST) {
+    if (!card || !card.assignedUsers || !card.assignedUsers.some((id) => String(id) === String(userId))) {
+      const error = new Error("Guests can only edit cards they are assigned to");
+      error.statusCode = 403;
+      throw error;
+    }
   }
 };
 
@@ -48,7 +60,11 @@ export const cardService = {
 
   async create(listId, userId, payload) {
     const { membership } = await getMembershipFromList(listId, userId);
-    assertCardWriteAccess(membership);
+    if (!membership || !hasMinimumRole(membership.role, WORKSPACE_ROLES.MEMBER)) {
+      const error = new Error("Only Owner, Admin, and Member can create cards");
+      error.statusCode = 403;
+      throw error;
+    }
 
     const cards = await cardRepository.findByListId(listId);
     const last = cards[cards.length - 1];
@@ -102,7 +118,7 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    assertCardWriteAccess(membership);
+    assertCardWriteAccess(membership, card, userId);
 
     return cardRepository.updateById(id, payload);
   },
@@ -116,7 +132,11 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    assertCardWriteAccess(membership);
+    if (!membership || !hasMinimumRole(membership.role, WORKSPACE_ROLES.MEMBER)) {
+      const error = new Error("Only Owner, Admin, and Member can delete cards");
+      error.statusCode = 403;
+      throw error;
+    }
 
     await cardRepository.deleteById(id);
     return { deleted: true };
@@ -131,11 +151,11 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    assertCardWriteAccess(membership);
+    assertCardWriteAccess(membership, card, userId);
 
     const destinationListId = payload.listId || card.listId;
     const destinationInfo = await getMembershipFromList(destinationListId, userId);
-    assertCardWriteAccess(destinationInfo.membership);
+    assertCardWriteAccess(destinationInfo.membership, card, userId);
 
     const previous = payload.previousId ? await cardRepository.findById(payload.previousId) : null;
     const next = payload.nextId ? await cardRepository.findById(payload.nextId) : null;
@@ -177,7 +197,7 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    assertCardWriteAccess(membership);
+    assertCardWriteAccess(membership, card, userId);
 
     return cardRepository.updateById(id, { assignedUsers: payload.assignedUsers });
   },
@@ -191,7 +211,7 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    assertCardWriteAccess(membership);
+    assertCardWriteAccess(membership, card, userId);
 
     return cardRepository.updateById(id, { labels: payload.labels });
   },

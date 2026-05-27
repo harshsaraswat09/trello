@@ -5,7 +5,7 @@ import workspaceRoutes from "./routes/workspace.routes.js";
 import boardRoutes from "./routes/board.routes.js";
 import listRoutes from "./routes/list.routes.js";
 import cardRoutes from "./routes/card.routes.js";
-
+import commentRoutes from "./routes/comment.routes.js";
 
 const app = express();
 
@@ -17,8 +17,7 @@ app.use("/api/workspaces", workspaceRoutes);
 app.use("/api", boardRoutes);
 app.use("/api", listRoutes);
 app.use("/api", cardRoutes);
-
-
+app.use("/api", commentRoutes);
 
 app.get("/", (req, res) => {
   res.json({ success: true, message: "Attendance API running" });
