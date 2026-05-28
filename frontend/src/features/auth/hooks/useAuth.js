@@ -8,24 +8,11 @@ export const useAuth = () => {
   async function handleRegister({ name, email, password, role, department, managerId }) {
     try {
       dispatch(setLoading(true));
-      let user = null;
-      let token = null;
-      try {
-        const response = await registerUser({ name, email, password, role, department, managerId });
-        const payload = response.data || response;
-        user = payload.user || payload;
-        token = payload.accessToken || payload.token;
-      } catch (err) {
-        console.warn("API registration failed, falling back to local client auth session:", err.message);
-        user = {
-          id: `usr-${Date.now()}`,
-          name: name || "New User",
-          email,
-          role: role || "employee",
-          department: department || "Engineering",
-        };
-        token = `mock-token-${Date.now()}`;
-      }
+      const response = await registerUser({ name, email, password, role, department, managerId });
+      const payload = response.data || response;
+      const user = payload.user || payload;
+      const token = payload.accessToken || payload.token;
+      if (!token) throw new Error("Authentication token missing in register response");
       dispatch(setUser(user));
       dispatch(setToken(token));
       localStorage.setItem("token", token);
@@ -42,24 +29,11 @@ export const useAuth = () => {
   async function handleLogin({ email, password }) {
     try {
       dispatch(setLoading(true));
-      let user = null;
-      let token = null;
-      try {
-        const response = await loginUser({ email, password });
-        const payload = response.data || response;
-        user = payload.user || payload;
-        token = payload.accessToken || payload.token;
-      } catch (err) {
-        console.warn("API login failed, falling back to local client auth session:", err.message);
-        user = {
-          id: "usr-ceo",
-          name: email.split("@")[0].split(".").map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(" ") || "Harsh Saraswat",
-          email,
-          role: "admin",
-          department: "Executive",
-        };
-        token = `mock-token-${Date.now()}`;
-      }
+      const response = await loginUser({ email, password });
+      const payload = response.data || response;
+      const user = payload.user || payload;
+      const token = payload.accessToken || payload.token;
+      if (!token) throw new Error("Authentication token missing in login response");
       dispatch(setUser(user));
       dispatch(setToken(token));
       localStorage.setItem("token", token);
@@ -76,21 +50,11 @@ export const useAuth = () => {
   async function handleGetMe() {
     try {
       dispatch(setLoading(true));
-      let user = null;
-      try {
-        const response = await getUser();
-        const payload = response.data || response;
-        user = payload.data || payload;
-      } catch (err) {
-        console.warn("API getMe failed, attempting local cache retrieval:", err.message);
-        const cachedUser = localStorage.getItem("user");
-        if (cachedUser) {
-          user = JSON.parse(cachedUser);
-        } else {
-          throw err;
-        }
-      }
+      const response = await getUser();
+      const payload = response.data || response;
+      const user = payload.data || payload;
       dispatch(setUser(user));
+      localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (err) {
       localStorage.removeItem("token");

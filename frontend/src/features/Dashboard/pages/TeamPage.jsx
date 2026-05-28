@@ -4,9 +4,22 @@ import {
   MemberCard,
   PageHeader,
 } from "../components/DashboardComponents";
-import { members } from "../data/dashboardData";
+import { useEffect, useState } from "react";
+import { loadDashboardData } from "../services/dashboard.live";
 
 export default function TeamPage() {
+  const [members, setMembers] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    loadDashboardData().then((data) => {
+      if (mounted) setMembers(data.members);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <PageHeader

@@ -3,12 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useAuth } from "../../auth/hooks/useAuth";
 import {
-  activities,
   navItems,
   priorityStyles,
   quickActions,
   statusStyles,
-} from "../data/dashboardData";
+} from "../data/dashboardUi.constants";
 
 export function Logo() {
   return (
@@ -321,6 +320,16 @@ export function TaskTable({ tasks, showAction = false }) {
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
+          {tasks.length === 0 && (
+            <tr>
+              <td
+                colSpan={showAction ? 7 : 6}
+                className="px-5 py-6 text-center text-sm font-semibold text-slate-500"
+              >
+                No tasks found.
+              </td>
+            </tr>
+          )}
           {tasks.map((task) => (
             <tr key={task.title} className="text-sm transition hover:bg-slate-50">
               <td className="px-5 py-4 font-black text-slate-900">{task.title}</td>
@@ -352,11 +361,14 @@ export function TaskTable({ tasks, showAction = false }) {
   );
 }
 
-export function ActivityFeed({ items = activities }) {
+export function ActivityFeed({ items = [] }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <SectionTitle title="Recent Activity" />
       <div className="space-y-4">
+        {items.length === 0 && (
+          <p className="text-sm font-semibold text-slate-500">No recent activity yet.</p>
+        )}
         {items.map((item) => (
           <div key={`${item.text}-${item.time}`} className="flex gap-3">
             <Avatar label={item.user} size="sm" />

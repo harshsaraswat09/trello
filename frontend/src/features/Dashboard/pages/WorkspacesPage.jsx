@@ -5,29 +5,19 @@ import {
   PageHeader,
   WorkspaceCard,
 } from "../components/DashboardComponents";
-import { workspaces as fallbackWorkspaces } from "../data/dashboardData";
-import { getWorkspaces } from "../services/dashboard.api";
-import { toWorkspaceCard } from "../services/dashboard.transforms";
+import { loadDashboardData } from "../services/dashboard.live";
 
 export default function WorkspacesPage() {
-  const [workspaces, setWorkspaces] = useState(fallbackWorkspaces);
+  const [workspaces, setWorkspaces] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState("demo");
 
   useEffect(() => {
     let mounted = true;
 
     async function loadWorkspaces() {
       try {
-        const data = await getWorkspaces();
-        const mapped = data.map(toWorkspaceCard);
-
-        if (mounted && mapped.length > 0) {
-          setWorkspaces(mapped);
-          setSource("live");
-        }
-      } catch (error) {
-        console.warn("Using demo workspaces because API request failed:", error.message);
+        const data = await loadDashboardData();
+        if (mounted) setWorkspaces(data.workspaces);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -45,7 +35,7 @@ export default function WorkspacesPage() {
       <PageHeader
         eyebrow="Workspaces"
         title="Workspaces"
-        description={`${source === "live" ? "Live backend data" : "Demo fallback data"} · Group boards, people, and delivery processes by team, department, or client.`}
+        description="Group boards, people, and delivery processes by team, department, or client."
         action={
           <Link
             to="/workspaces/new"

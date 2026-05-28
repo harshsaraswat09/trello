@@ -5,16 +5,14 @@ import {
   DashboardLayout,
   PageHeader,
 } from "../components/DashboardComponents";
-import { boards as fallbackBoards, workspaces as fallbackWorkspaces } from "../data/dashboardData";
-import { getBoardsByWorkspace, getWorkspaces } from "../services/dashboard.api";
-import { toBoardCard, toWorkspaceCard } from "../services/dashboard.transforms";
+import { loadDashboardData } from "../services/dashboard.live";
 
 export default function BoardsPage() {
-  const [workspaces, setWorkspaces] = useState(fallbackWorkspaces);
-  const [boards, setBoards] = useState(fallbackBoards);
+  const [workspaces, setWorkspaces] = useState([]);
+  const [boards, setBoards] = useState([]);
   const [selectedWorkspace, setSelectedWorkspace] = useState("All workspaces");
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState("demo");
+
   const filteredBoards = useMemo(() => {
     if (selectedWorkspace === "All workspaces") return boards;
     return boards.filter((board) => board.workspace === selectedWorkspace);
@@ -25,23 +23,10 @@ export default function BoardsPage() {
 
     async function loadBoards() {
       try {
-        const workspaceData = await getWorkspaces();
-        const mappedWorkspaces = workspaceData.map(toWorkspaceCard);
-        const boardGroups = await Promise.all(
-          mappedWorkspaces.map(async (workspace) => {
-            const workspaceBoards = await getBoardsByWorkspace(workspace.id);
-            return workspaceBoards.map((board) => toBoardCard(board, workspace.name));
-          })
-        );
-        const mappedBoards = boardGroups.flat();
-
-        if (mounted && mappedWorkspaces.length > 0) {
-          setWorkspaces(mappedWorkspaces);
-          setBoards(mappedBoards.length > 0 ? mappedBoards : fallbackBoards);
-          setSource(mappedBoards.length > 0 ? "live" : "demo");
-        }
-      } catch (error) {
-        console.warn("Using demo boards because API request failed:", error.message);
+        const data = await loadDashboardData();
+        if (!mounted) return;
+        setWorkspaces(data.workspaces);
+        setBoards(data.boards);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -59,7 +44,7 @@ export default function BoardsPage() {
       <PageHeader
         eyebrow="Boards"
         title="Boards"
-        description={`${source === "live" ? "Live backend data" : "Demo fallback data"} · Track all active boards across your WorkflowOS workspaces.`}
+        description="Track all active boards across your WorkflowOS workspaces."
         action={
           <Link
             to="/boards/new"

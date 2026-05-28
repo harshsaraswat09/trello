@@ -16,46 +16,65 @@ const run = async () => {
   try {
     await connectDB();
 
-    const email = "dummy.user@example.com";
-    const existingUser = await User.findOne({ email });
+    const seedUsers = [
+      {
+        name: "System Admin",
+        email: "admin.user@example.com",
+        password: "AdminPassword123!",
+        role: "admin",
+        department: "Executive",
+      },
+      {
+        name: "Dummy Manager",
+        email: "manager.user@example.com",
+        password: "ManagerPassword123!",
+        role: "manager",
+        department: "Engineering",
+      },
+      {
+        name: "Dummy User",
+        email: "dummy.user@example.com",
+        password: "DummyPassword123!",
+        role: "employee",
+        department: "Engineering",
+      },
+      {
+        name: "QA User",
+        email: "qa.user@example.com",
+        password: "QaPassword123!",
+        role: "employee",
+        department: "QA",
+      },
+    ];
 
-    if (existingUser) {
-      const token = generateToken(existingUser._id);
-      console.log("Dummy user already exists:");
-      console.log(JSON.stringify({
-        _id: existingUser._id,
-        name: existingUser.name,
-        email: existingUser.email,
-        role: existingUser.role,
-        department: existingUser.department,
-        token,
-      }, null, 2));
-      process.exit(0);
+    const results = [];
+
+    for (const seed of seedUsers) {
+      let user = await User.findOne({ email: seed.email });
+
+      if (!user) {
+        user = await User.create({
+          ...seed,
+          managerId: null,
+        });
+      }
+
+      results.push({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        password: seed.password,
+        role: user.role,
+        department: user.department,
+        token: generateToken(user._id),
+      });
     }
 
-    const user = await User.create({
-      name: "Dummy User",
-      email,
-      password: "DummyPassword123!",
-      role: "employee",
-      department: "Engineering",
-      managerId: null,
-    });
-
-    const token = generateToken(user._id);
-
-    console.log("Dummy user created successfully:");
-    console.log(JSON.stringify({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      department: user.department,
-      token,
-    }, null, 2));
+    console.log("Seed users ready:");
+    console.log(JSON.stringify(results, null, 2));
     process.exit(0);
   } catch (error) {
-    console.error("Failed to create dummy user:", error);
+    console.error("Failed to seed users:", error);
     process.exit(1);
   }
 };

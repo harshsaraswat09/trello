@@ -5,17 +5,14 @@ import {
   PageHeader,
   TaskCard,
 } from "../components/DashboardComponents";
-import { boards, kanbanColumns } from "../data/dashboardData";
 import { getBoardById, getCardsByList, getListsByBoard } from "../services/dashboard.api";
 import { toBoardCard, toKanbanColumn } from "../services/dashboard.transforms";
 
 export default function BoardDetailPage() {
   const { boardId } = useParams();
-  const fallbackBoard = boards.find((item) => item.id === boardId) || boards[0];
-  const [board, setBoard] = useState(fallbackBoard);
-  const [columns, setColumns] = useState(kanbanColumns);
+  const [board, setBoard] = useState(null);
+  const [columns, setColumns] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState("demo");
 
   useEffect(() => {
     let mounted = true;
@@ -32,12 +29,18 @@ export default function BoardDetailPage() {
         );
 
         if (mounted) {
-          setBoard(toBoardCard(boardData));
-          setColumns(cardGroups.length > 0 ? cardGroups : kanbanColumns);
-          setSource("live");
+          setBoard(
+            toBoardCard(
+              {
+                ...boardData,
+                listCount: lists.length,
+                cardCount: cardGroups.reduce((sum, item) => sum + item.tasks.length, 0),
+              },
+              "Workspace"
+            )
+          );
+          setColumns(cardGroups);
         }
-      } catch (error) {
-        console.warn("Using demo board because API request failed:", error.message);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -53,9 +56,9 @@ export default function BoardDetailPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        eyebrow={board.workspace}
-        title={board.title}
-        description={`${source === "live" ? "Live backend data" : "Demo fallback data"} · ${board.lists} lists, ${board.cards} cards, ${board.progress}% complete.`}
+        eyebrow={board?.workspace}
+        title={board?.title || "Board"}
+        description={`${board?.lists || 0} lists, ${board?.cards || 0} cards, ${board?.progress || 0}% complete.`}
         action={
           <Link
             to="/boards"
@@ -72,7 +75,7 @@ export default function BoardDetailPage() {
       )}
       <section className="grid gap-4 overflow-x-auto pb-3 lg:grid-cols-4">
         {columns.map((column) => (
-          <div key={column.title} className="min-w-[260px] rounded-2xl bg-slate-100 p-3">
+          <div key={column.id} className="min-w-[260px] rounded-2xl bg-slate-100 p-3">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-black text-slate-800">{column.title}</h2>
               <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-slate-500">
@@ -81,7 +84,7 @@ export default function BoardDetailPage() {
             </div>
             <div className="space-y-3">
               {column.tasks.map((task) => (
-                <TaskCard key={task.title} task={task} />
+                <TaskCard key={task.id} task={task} />
               ))}
             </div>
             <button className="mt-3 w-full rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-3 text-sm font-black text-slate-600 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700">

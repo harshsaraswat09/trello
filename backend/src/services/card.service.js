@@ -3,7 +3,6 @@ import { listRepository } from "../repositories/list.repository.js";
 import { boardRepository } from "../repositories/board.repository.js";
 import { workspaceMemberRepository } from "../repositories/workspace-member.repository.js";
 import { WORKSPACE_ROLES } from "../constants/workspace-roles.js";
-import { hasMinimumRole } from "./permission.service.js";
 import { getOrderBetween } from "../utils/order.util.js";
 import { logActivity } from "./activity.service.js";
 
@@ -60,7 +59,13 @@ export const cardService = {
 
   async create(listId, userId, payload) {
     const { membership } = await getMembershipFromList(listId, userId);
-    if (!membership || !hasMinimumRole(membership.role, WORKSPACE_ROLES.MEMBER)) {
+    const canCreateCard =
+      membership &&
+      (membership.role === WORKSPACE_ROLES.OWNER ||
+        membership.role === WORKSPACE_ROLES.ADMIN ||
+        membership.role === WORKSPACE_ROLES.MEMBER);
+
+    if (!canCreateCard) {
       const error = new Error("Only Owner, Admin, and Member can create cards");
       error.statusCode = 403;
       throw error;
@@ -132,7 +137,13 @@ export const cardService = {
     }
 
     const { membership } = await getMembershipFromList(card.listId, userId);
-    if (!membership || !hasMinimumRole(membership.role, WORKSPACE_ROLES.MEMBER)) {
+    const canDeleteCard =
+      membership &&
+      (membership.role === WORKSPACE_ROLES.OWNER ||
+        membership.role === WORKSPACE_ROLES.ADMIN ||
+        membership.role === WORKSPACE_ROLES.MEMBER);
+
+    if (!canDeleteCard) {
       const error = new Error("Only Owner, Admin, and Member can delete cards");
       error.statusCode = 403;
       throw error;

@@ -45,7 +45,7 @@ export const commentService = {
   },
 
   async create(cardId, userId, payload) {
-    const { board, membership } = await getMembershipFromCard(cardId, userId);
+    const { membership } = await getMembershipFromCard(cardId, userId);
     if (!membership) {
       const error = new Error("Access denied");
       error.statusCode = 403;

@@ -1,9 +1,22 @@
 import { DashboardLayout, PageHeader } from "../components/DashboardComponents";
-import { tasks } from "../data/dashboardData";
+import { useEffect, useState } from "react";
+import { loadDashboardData } from "../services/dashboard.live";
 
 const days = Array.from({ length: 35 }, (_, index) => index + 1);
 
 export default function CalendarPage() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    loadDashboardData().then((data) => {
+      if (mounted) setTasks(data.tasks.slice(0, 8));
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <PageHeader
@@ -47,10 +60,10 @@ export default function CalendarPage() {
           <h2 className="mb-4 text-xl font-black text-slate-950">Upcoming deadlines</h2>
           <div className="space-y-3">
             {tasks.map((task) => (
-              <div key={task.title} className="rounded-xl bg-slate-50 p-4">
+              <div key={task.id} className="rounded-xl bg-slate-50 p-4">
                 <p className="text-sm font-black text-slate-900">{task.title}</p>
                 <p className="mt-1 text-xs font-bold text-slate-500">
-                  {task.board} Â· {task.due}
+                  {task.board} · {task.due}
                 </p>
               </div>
             ))}

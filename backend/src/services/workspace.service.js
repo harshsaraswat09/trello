@@ -106,7 +106,12 @@ export const workspaceService = {
 
   async invite(workspaceId, userId, payload) {
     const membership = await requireMembership(workspaceId, userId);
-    if (!hasMinimumRole(membership.role, WORKSPACE_ROLES.MEMBER)) {
+    const canInvite =
+      membership.role === WORKSPACE_ROLES.OWNER ||
+      membership.role === WORKSPACE_ROLES.ADMIN ||
+      membership.role === WORKSPACE_ROLES.MEMBER;
+
+    if (!canInvite) {
       const error = new Error("Only Owner, Admin, and Member can invite users");
       error.statusCode = 403;
       throw error;

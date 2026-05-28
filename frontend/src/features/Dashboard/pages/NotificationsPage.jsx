@@ -3,9 +3,22 @@ import {
   NotificationItem,
   PageHeader,
 } from "../components/DashboardComponents";
-import { notifications } from "../data/dashboardData";
+import { useEffect, useState } from "react";
+import { loadDashboardData } from "../services/dashboard.live";
 
 export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    let mounted = true;
+    loadDashboardData().then((data) => {
+      if (mounted) setNotifications(data.notifications);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <DashboardLayout>
       <PageHeader
@@ -20,7 +33,7 @@ export default function NotificationsPage() {
       />
       <section className="space-y-3">
         {notifications.map((notification) => (
-          <NotificationItem key={`${notification.type}-${notification.time}`} notification={notification} />
+          <NotificationItem key={`${notification.type}-${notification.time}-${notification.text}`} notification={notification} />
         ))}
       </section>
     </DashboardLayout>

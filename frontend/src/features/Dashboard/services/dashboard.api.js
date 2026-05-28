@@ -17,6 +17,7 @@ api.interceptors.request.use((config) => {
 });
 
 const unwrap = (response) => response.data?.data ?? response.data;
+export { api };
 
 export const getWorkspaces = async () => {
   const response = await api.get("/workspaces");
@@ -63,5 +64,20 @@ export const getCardsByList = async (listId) => {
 
 export const createCard = async (listId, payload) => {
   const response = await api.post(`/lists/${listId}/cards`, payload);
+  return unwrap(response);
+};
+
+export const updateCard = async (cardId, payload) => {
+  const response = await api.patch(`/cards/${cardId}`, payload);
+  return unwrap(response);
+};
+
+export const deleteCard = async (cardId) => {
+  const response = await api.delete(`/cards/${cardId}`);
+  return unwrap(response);
+};
+
+export const getCommentsByCard = async (cardId) => {
+  const response = await api.get(`/cards/${cardId}/comments`);
   return unwrap(response);
 };
